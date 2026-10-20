@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BantayAni — Soil Sensor Monitoring System</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <!-- ==================== SIDEBAR ==================== -->
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-dot"></span>
+      <span>BantayAni</span>
+    </div>
+
+    <div class="side-section">
+      <label for="sensorSelect">Select sensor</label>
+      <select id="sensorSelect"></select>
+      <div class="recent-reading">
+        <span class="rr-label">recent reading</span>
+        <span class="rr-value" id="recentValue">—</span>
+        <span class="rr-status" id="recentStatus">no data</span>
+      </div>
+    </div>
+
+    <div class="side-section">
+      <label>year</label>
+      <select id="yearSelect"><option value="all">All years</option></select>
+      <label>month</label>
+      <select id="monthSelect">
+        <option value="all">All months</option>
+      </select>
+    </div>
+
+    <div class="side-section">
+      <label>data basis</label>
+      <select id="basisSelect">
+        <option value="all">All readings</option>
+        <option value="sensor">Sensor (auto)</option>
+        <option value="manual">Manual entry</option>
+      </select>
+    </div>
+
+    <div class="side-section owner-box">
+      <label>contact no.</label>
+      <input type="tel" id="ownerContact" placeholder="+63XXX XXX XXXX" />
+      <label>name of owner</label>
+      <input type="text" id="ownerName" placeholder="Farm owner" />
+    </div>
+
+    <div class="side-section sim-box">
+      <button id="simToggle" class="btn btn-sim">▶ Start sensor feed</button>
+      <p class="sim-note">Simulates live sensor readings &amp; SMS alerts</p>
+    </div>
+  </aside>
+
+  <!-- ==================== MAIN ==================== -->
+  <main class="main">
+
+    <header class="main-header">
+      <div>
+        <h1>individual analysis of measured data</h1>
+        <p class="subtitle" id="analysisSubtitle">Auto-updating from latest sensor readings</p>
+      </div>
+      <div class="chips" id="statusChips"></div>
+    </header>
+
+    <!-- Top cards: recommendations + big pH -->
+    <section class="grid-top">
+
+      <article class="card card-crop">
+        <h3>the recommendation<br />of crop type</h3>
+        <div id="cropRecommendation" class="card-body">
+          <p class="muted">Waiting for pH reading…</p>
+        </div>
+      </article>
+
+      <article class="card card-fert">
+        <h3>the recommendation<br />of amount of fertilizer</h3>
+        <div id="fertRecommendation" class="card-body">
+          <p class="muted">Waiting for N·P·K readings…</p>
+        </div>
+      </article>
+
+      <article class="card card-ph" id="phCard">
+        <span class="ph-label">ph level</span>
+        <span class="ph-value" id="phValue">—</span>
+        <span class="ph-class" id="phClass">no data</span>
+        <div class="ph-bar"><div class="ph-bar-fill" id="phBarFill"></div></div>
+        <span class="ph-range-scale"><i>4</i><i>7</i><i>10</i></span>
+      </article>
+
+    </section>
+
+    <!-- Other measured data cards -->
+    <section class="grid-metrics" id="metricCards"></section>
+
+    <!-- Line graph -->
+    <section class="card card-chart">
+      <div class="chart-head">
+        <h3 id="chartTitle">sensor trend</h3>
+        <span class="chart-hint" id="chartHint"></span>
+      </div>
+      <div class="chart-wrap"><canvas id="trendChart"></canvas></div>
+    </section>
+
+    <!-- Alerts + SMS log + manual entry -->
+    <section class="grid-panels">
+
+      <article class="card panel">
+        <h3>⚠ alerts (system)</h3>
+        <div id="alertList" class="log-list"><p class="muted">No alerts yet.</p></div>
+      </article>
+
+      <article class="card panel">
+        <h3>📩 SMS log (sent to owner)</h3>
+        <div id="smsList" class="log-list"><p class="muted">No SMS sent yet.</p></div>
+      </article>
+
+      <article class="card panel">
+        <h3>➕ manual data entry</h3>
+        <form id="manualForm" class="manual-form">
+          <select id="manualSensor"></select>
+          <input type="number" step="any" id="manualValue" placeholder="Value" required />
+          <button type="submit" class="btn">Save reading</button>
+        </form>
+        <p class="muted small">Manual readings are saved to the system and included in analysis.</p>
+      </article>
+
+    </section>
+
+    <footer class="footer">
+      BantayAni · Soil sensor monitoring, crop &amp; fertilizer recommendations · data stored locally in this browser
+    </footer>
+  </main>
+
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
